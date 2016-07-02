@@ -1,0 +1,62 @@
+Based on: http://hackaday.com/2016/02/03/code-craft-cross-compiling-for-the-raspberry-pi/
+
+On the host:
+	sudo apt-get install build-essential		// general build tools
+	sudo apt-get install g++-arm-linux-gnueabihf	// c & C++ compiler for ARM processor
+	sudo apt-get install gdb-multiarch		// cross-platform gdb debugger
+	sudo apt-get install gdbserver			// for remote debugging
+
+Compile this file (hellochip.cpp):
+
+	#include <iostream>
+	using namespace std;
+	 
+	int main() {
+	    cout << "Hello World From Chip!!!" << endl;
+	    return 0;
+	}
+
+Using:
+	arm-linux-gnueabihf-g++ hellochip.cpp -o3 -g3 -Wall -o hellochip
+
+Transfer to Chip:
+	scp hellochip root@<target IP address>:/bin/hellochip
+or...
+	!sshpass -p 'password' scp hello chip@<target IP Address>:/bin/hellochip
+
+To debug remotely, on the Chip:
+	sudo apt-get install gdbserver
+	gdbserver
+
+On the host, in the build directory:
+	gdb-multiarch
+
+	(gdb) target extended-remote <target IP address>:2001
+		Remote debugging using <target IP Address>:2001
+	(gdb) set remote exec-file /bin/hellochip
+	(gdb) file hellochip
+		Reading symbols from hellochip...done.
+	(gdb) run
+		Starting program: /home/craig/Desktop/hellochip/hellochip 
+		warning: Unable to find dynamic linker breakpoint function.
+		GDB will be unable to debug shared library initialisers
+		and track explicitly loaded dynamic code.
+		warning: Could not load shared library symbols for 6 libraries, e.g. linux-vdso.so.1.
+		Use the "info sharedlibrary" command to see the complete listing.
+		Do you need "set solib-search-path" or "set sysroot"?
+		[Inferior 1 (process 751) exited normally]
+
+
+Output on the target:
+	Listening on port 2001
+	Remote debugging from host <host IP address>
+	Process /bin/hellochip created; pid = 751
+	Hello World From Chip!!!
+
+Insert a breakpoint on line 6:
+	b 6
+	run
+	c
+
+
+
