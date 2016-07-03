@@ -1,3 +1,12 @@
+Building the Linaro toolchain
+
+	git clone https://github.com/NextThingCo/CHIP-SDK.git
+	cd CHIP-SDK/CHIP-buildroot
+	make chip_defconfig
+	make nconfig
+	make
+___________________________________________________________________________________________
+
 Based on: http://hackaday.com/2016/02/03/code-craft-cross-compiling-for-the-raspberry-pi/
 
 On the host:
@@ -58,5 +67,44 @@ Insert a breakpoint on line 6:
 	run
 	c
 
+__________________________________________________________________________________________
 
+http://hertaville.com/2012/09/28/development-environment-raspberry-pi-cross-compiler/
 
+sudo apt-get install build-essential git
+
+In Eclipse create new C++ Executable->Empty project
+Toolchains: 'Cross GCC'
+Cross-Compiler prefix: 'arm-linux-gnueabihf-'
+Cross-Compiler Path: '/usr/bin/arm-linux-gnueabihf-g++'
+
+Build Main.cpp:
+
+	#include <iostream>
+
+	using namespace std;
+
+	int main (void)
+	{
+	    cout << "Hello Chip from Eclipse" << endl;
+	    return 0;
+	}
+
+Using ctrl+b
+
+To deploy to target:
+'Window->Show View->Other->Remote Systems->Remote Systems Details'
+
+Right click 'Remote Systems Detail->New Connection->Select Remote System Type->SSH only'
+
+Enter target IP Address into 'Host Name' and 'Connection Name' fields
+
+Right-click the new connection that appears and click 'Connect'
+
+Right-click the new connection and click 'New Connection'. In the 'Select Remote System Type' window select 'SSH only'
+
+In here you can copy and paste files between the local and target systems
+
+In the 'Remote Systems' window expand the target and 'Ssh Shells', then double click the target to open a remote terminal
+
+http://hertaville.com/2013/01/11/remote-debugging/
